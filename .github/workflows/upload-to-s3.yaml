@@ -1,0 +1,20 @@
+name: Upload to S3
+on:
+  push:
+    branches:
+      - main
+jobs:
+  upload-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::491624026173:role/blog-s3-uploader
+          aws-region: ca-central-1
+
+      - name: Some name
+        run: echo "Hello, world!"
