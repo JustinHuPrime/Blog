@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - main
+permissions:
+  id-token: write
+  contents: read
 jobs:
   upload-files:
     runs-on: ubuntu-latest
@@ -16,5 +19,6 @@ jobs:
           role-to-assume: arn:aws:iam::491624026173:role/blog-s3-uploader
           aws-region: ca-central-1
 
-      - name: Some name
-        run: echo "Hello, world!"
+      - name: Copy files to the test website with the AWS CLI
+        run: |
+          aws s3 sync . s3://zootron.ca --exclude "*.md" --exclude ".*"
