@@ -39,9 +39,8 @@
             I'm doing
             <a href="https://adventofcode.com/2022">Advent of Code</a> again
             this year, and like last year, I'm doing it in x86_64 assembly.
-            Hopefully I can get through everything this year!
           </p>
-          <p>The rules for this challenge are:</p>
+          <p>The rules for this challenge were:</p>
           <ol>
             <li>
               All of the code for solving the challenge must be written in
@@ -61,14 +60,39 @@
           <p>
             So why am I doing this? It's quite fun to program in assembly - at
             least for small programs. Also, I'm writing a
-            <a href="/projects/t-compiler.html">compiler</a>, and since I'm compiling to x86_64
-            assembly, it's good to practice writing assembly by hand.
+            <a href="/projects/t-compiler.html">compiler</a>, and since I'm
+            compiling to x86_64 assembly, it's good to practice writing assembly
+            by hand.
           </p>
           <p>
             I'm using the <a href="https://www.nasm.us">nasm</a> assembler to
             assemble, and the standard Linux
             <a href="https://linux.die.net/man/1/ld">ld</a> linker.
           </p>
+          <p>
+            Unfortunately, I've been unable to finish this year. Assembly
+            programming with structs was as difficult as I expected, and I did
+            not manage to finish Day 11. I think I'll have to learn how to use
+            more advanced macro-assembler features. I also found that register
+            allocation was difficult. If I attempt this again next year, I'd
+            probably write the assembly code using temporaries as a first pass,
+            before doing register allocation. This might involve use of the
+            pre-processor for register allocation - for example:
+          </p>
+          <code>
+            #define accumulator rax<br/>
+            #define length rcx<br/>
+            #define start r15<br/>
+            #define temp rdx<br/>
+            #define tempbyte dl<br/>
+            <br/>
+            &nbsp;&nbsp;mov accumulator, 0<br/>
+            &nbsp;&nbsp;mov temp, 0<br/>
+            .loop:<br/>
+            &nbsp;&nbsp;mov tempbyte, [start + length]<br/>
+            &nbsp;&nbsp;add accumulator, temp<br/>
+            &nbsp;&nbsp;loop .loop<br/>
+          </code>
         </div>
       </div>
     </div>
