@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Justin Hu | How to ELF</title>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="Justin Hu's Blog" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- CSS only -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <h1>How to ELF</h1>
+        <h2>A brief introduction to below-C level programming on Linux</h2>
+      </div>
+      <div class="row">
+        <p>
+          You may be aware that I'm doing
+          <a href="https://adventofcode.com/2023">Advent of Code</a> in
+          assembly. You might be wondering where someone learns the (dark) art
+          of programming in assembly. Perhaps you'd like to write a compiler, or
+          just want to recreate how the programmers of yore did things. So
+          here's a brief overview of assembly programming on x86_64 and Linux -
+          I'm going to assume that you've read the <code>nasm</code> manual well
+          enough to understand assembly syntax, and are a proficient C
+          programmer.
+        </p>
+        <h2>What Your Compiler Does</h2>
+        <p>
+          Learning assembly is really mostly unwrapping the layer of abstraction
+          the C compiler provides - which is actually a really thick layering of
+          multiple abstractions. Let's look at one of the thinner layers - the
+          compiler driver. What you think of as a C compiler is actually a few
+          programs working together, all orchestrated by the compiler driver.
+          You can see this if you give <code>gcc</code> the option
+          <code>-v</code>. Here's an example, with the irrelevant stuff omitted.
+        </p>
+        <pre>
+justin@Carbon ~/AdventOfCode> gcc -v hello.c -o hello
+ cc1 hello.c -o /tmp/ccEY5VjO.s
+ as -o /tmp/ccJ9QAxD.o /tmp/ccEY5VjO.s
+ collect2 -o hello /tmp/ccJ9QAxD.o -lc</pre
+        >
+        <p>
+          Let's break this down a bit. When I ask <code>gcc</code> to compile a
+          file, first, it delegates the transformation of the file from C to
+          assembly over to <code>cc1</code>, the actual compiler program. This
+          is a part that gets skipped when you're writing assembly directly.
+          Then, it asks the system assembler, <code>as</code>, to assemble the
+          file into an object file. Finally, it asks the linker,
+          <code>collect2</code> (which is itself a wrapper around the actual
+          linker, <code>ld</code>), to link the object file with the C standard
+          library (another thing that you don't have when working in assembly)
+          and produce the executable named <code>hello</code>.
+        </p>
+        <p>
+          The actual sequence of commands to produce some assembly is largely
+          similar to what your compiler does.
+        </p>
+        <pre>
+justin@Carbon ~/AdventOfCode> nasm -f elf64 common.s
+justin@Carbon ~/AdventOfCode> nasm -f elf64 5a.s
+justin@Carbon ~/AdventOfCode> ld -o 5a 5a.o common.o</pre
+        >
+        <p>
+          We ask the assembler (I'm using <code>nasm</code> since its syntax is
+          a lot nicer to work with) to compile our assembly files into object
+          files (the output file name can be implicit), and then we ask the
+          linker to produce a executable. (<code>nasm</code> unhelpfully
+          defaults to 32-bit ELF files, even on my 64-bit system, so we need to
+          tell it otherwise.)
+        </p>
+        <h2>Just What is a Program Anyway</h2>
+        <p>
+          So now let's talk about ELF files - the Executable and Linkable Format
+          is a file format for binary data. Both object files and executables
+          are ELF files, and I'll get into the exact differences later. In
+          general, an ELF file consists of sections; when a program is run,
+          Linux will load those sections into memory (from where in the file and
+          to where in memory based on information stored in the ELF file - in
+          the program header table), set all registers except the instruction
+          pointer and stack pointer to zero, set up the stack, and start
+          userspace execution with the instruction pointer set to the value
+          specified in the ELF file.
+        </p>
+        <p>
+          All of the ELF file manipulation is the province of the assembler and
+          the linker. Your job, as the programmer, is to tell the assembler what
+          sections you would like to have, and what the contents of those
+          sections are. So what sections could you have? There's four main types
+          your assembler recognizes. There's <code>.text</code> sections (yes,
+          the period is intentional - section names always start with a dot,
+          don't ask me why), which contain the actual assembly code of your
+          program. There's <code>.data</code> sections - these contain data that
+          your program may read and modify. There's
+          <code>.rodata</code> sections - these contain data that your program
+          may only read. This is usually where string literals are kept.
+          Finally, there's <code>.bss</code> sections, where zero-initialized
+          writable data is kept. (<code>.bss</code> stands for block started by
+          symbol - it's historical baggage; x86_64 assembly has enough
+          historical baggage to fill an airliner.) You'd use a
+          <code>.bss</code> section because however much you have, it takes up a
+          constant amount of disk space (constant because the section still
+          needs to have its metadata and size stored in the ELF file).
+        </p>
+        <p>
+          Only the linker and the assembler really care about section types -
+          they're a construct that your assembler has decided to provide.
+          There's nothing in ELF stopping you from declaring a section that is
+          not readable and only writable, or a section that is readable,
+          writable, and executable.
+        </p>
+        <p>
+          Now, let's get to the difference between object files and executable
+          files. The linker takes in object files, decides where everything goes
+          in memory in absolute terms, and produces an executable. The main
+          difference between object files and executables is that object files
+          have a relocation table, and executable files don't. Suppose I want
+          one object file to call a function defined elsewhere. I need to know
+          the address of the function to call it, but I only know that once the
+          linker decides where everything goes in memory in absolute terms. So
+          the assembler will add an entry into the relocation section
+          instructing the linker to edit the code and insert the absolute
+          address of the function once it's known. Likewise, the assembler, for
+          the other file, will add an entry to the symbol table section
+          declaring that the function with this name may be found at some offset
+          in this file's text section. And then the linker must reconcile these
+          tables, except it also needs to know where the entry point of the
+          program should be - where the instruction pointer should point when
+          the program starts. That's traditionally pointed at the symbol
+          <code>_start</code> in the text section. Interestingly, the linker
+          keeps the symbol table around in the finished executable (the
+          <code>strip</code> command discards these). This is quite convenient
+          since assemblers don't include any more detailed kind of debugging
+          symbols, but <code>gdb</code> is perfectly happy to read the included
+          symbol table.
+        </p>
+        <p>
+          As an aside, your C compiler won't actually produce any code for the
+          <code>_start</code> symbol - the main function is at a symbol called
+          <code>main</code> (more or less - some C compilers prefix C symbols
+          with an underscore). The C standard library supplies a wrapper at
+          <code>_start</code> that does some work to get the command line
+          arguments (see below) into the expected locations before calling main
+          and then making the <code>exit</code> syscall, among other things.
+          This is necessarily written in assembly - which is, perhaps, a reason
+          you might want to know how to at least read assembly: so you can
+          understand how your program's runtime environment gets set up. This is
+          also where, in languages with non-constant global variables, those
+          variables are initialized. For more information, see
+          <a href="https://gcc.gnu.org/onlinedocs/gccint/Initialization.html"
+            >GCC's documentation on constructors and initialization</a
+          >.
+        </p>
+        <h2>Doing Things</h2>
+        <p>
+          Okay - let's cover actual assembly programming. Remember that, since
+          this is assembly, almost everything is a matter of programmer
+          convention and almost nothing is enforced by your environment. You've
+          got 16 registers, accessible as either a single byte, a word (two
+          bytes), a doubleword (four bytes), or a quadword (eight bytes). Notice
+          that I didn't mention anything about what those bytes might store.
+          It's up to you, the programmer, to enforce type rules. The first eight
+          registers are the original eight, and some of them are specifically
+          referenced in some instructions as an implicit operand - this
+          shouldn't stop you from using them as general purpose registers most
+          of the time.
+          <code>rax</code> was the accumulator, and it's often the implicit
+          source operand of some instructions, like the
+          <code>mul</code> instruction. <code>rbx</code> isn't often a special
+          register, but <code>rcx</code> is special, and is often used as a
+          counter. <code>rdx</code> is occasionally used to extend
+          <code>rax</code> to twice its usual length, again, see the
+          <code>mul</code> instruction for an example. <code>rsi</code> and
+          <code>rdi</code> are used in string operations. <code>rsp</code> is
+          the only one that's special all the time - it's the stack pointer.
+          <code>rbp</code> is the base pointer (i.e. it points to the return
+          address on the stack), but it can also be used as a special purpose
+          register. The rest, which are numbered and not named, are general
+          purpose registers all the time.
+        </p>
+        <p>
+          Most of the basic arithmetic operations you'd be familiar with in a
+          high level language have direct counterparts in assembly - addition
+          (<code>add</code>) and subtraction (<code>sub</code>) work on signed
+          and unsigned numbers with the same instruction. Multiplication is
+          split into signed (<code>imul</code>) and unsigned (<code>mul</code>),
+          as is division (<code>idiv</code>, <code>div</code>). You'll often
+          want to avoid multiplication and especially division, since unsigned
+          multiplication and division require you to fiddle around with the
+          special purpose uses of <code>rax</code> and <code>rdx</code>.
+        </p>
+        <p>
+          Control flow, however, is a bit less congruent. You have three main
+          control-flow primitives - unconditional jumps, conditional jumps, and
+          function calls. Unconditional jumps and conditional jumps can be used
+          to make the equivalent of if/else statements and loops. Here's an
+          example of a simple if statement:
+        </p>
+        <pre>
+  cmp rax, 0
+  jne .notZero
+
+  ; rax is zero
+  add rax, 5
+
+notZero:
+        </pre>
+        <p>
+          First, we do a comparison of <code>rax</code> with zero. There's two
+          main comparison operations - <code>cmp</code>, which subtracts the
+          second operand from the first and sets the flags according to the
+          result, and <code>test</code>, which does a bitwise-and of the two
+          operands and sets the flags according to the result. The flags
+          register (you can't directly interact with this one) is queried when
+          doing a conditional jump. Note that a <code>cmp</code> followed by a
+          relational-style conditional jump, like <code>jle</code>, will jump if
+          the first operand has the indicated relation to the second operand.
+          (In math speak, <i>a</i> - <i>b</i> is related to zero identically to
+          how <i>a</i> is related to <i>b</i>). There's also the negations of
+          each sort of conditional jump - <code>jnle</code>, for example (which,
+          incidentally, is equivalent, both logically and in the assembly, to
+          <code>jg</code>).
+        </p>
+        <p>
+          In addition to the relational conditional jumps, you can also query
+          the state of individual flags directly - you can condition on the
+          carry flag, the overflow flag, the parity flag, the sign flag, and the
+          zero flag being either on or off. This is useful if, for example,
+          you've done a <code>test</code> and you want to jump if the result was
+          zero - you'd do a <code>jz</code>, which expresses your intent a lot
+          better than the equivalent <code>je</code>.
+        </p>
+        <p>
+          Note that <code>cmp x, 0</code> is equivalent to
+          <code>test x, x</code>, except like most instructions, you can only
+          have one memory operand per <code>test</code> instruction.
+        </p>
+        <p>
+          In addition to jumping forwards, you can also jump back, allowing you
+          to construct loops and even more control flow than the (admittedly
+          uncommonly felt) limitations of structured programming. Goto
+          considered harmful? In assembly, there's only gotos.
+        </p>
+        <p>
+          The last bit of control flow is the <code>call</code> instruction. It
+          takes a destination address (usually in the form of a label), and will
+          redirect the instruction pointer to that address until a
+          <code>ret</code> is encountered, after which time the instruction
+          pointer returns to just after the <code>call</code> instruction. Just
+          like a function call. Note, however, there's no arguments nor any
+          return value - you have to construct that yourself. To provide
+          arguments, you'd put them in registers or in specific locations on the
+          stack, and to get a return value, you'd read it from a register or off
+          of the stack. I'd recommend sticking to the
+          <a href="https://wiki.osdev.org/System_V_ABI#x86-64"
+            >System V calling convention</a
+          >
+          if you're writing something intended to be used in a different file.
+        </p>
+        <p>
+          Finally, let's touch on memory access. At some point, you're going to
+          need to store some data somewhere that isn't a register. You've got
+          three options. You either store it in the stack - at the start of your
+          function, you subtract from the stack pointer to allocate space (on
+          Linux, the stack grows downwards), and store data there. Or you store
+          it in static memory - some space allocated in the
+          <code>.data</code> or <code>.bss</code> section. Or you store it in
+          the heap. You'd use the <code>brk</code> syscall (see below) to
+          allocate some space, and store the data there. But remember that
+          you're going to need to store the pointer to that data on the heap
+          somewhere as well!
+        </p>
+        <p>So how does one allocate some space in a data section? Like this:</p>
+        <pre>
+section .data
+variable: dq 42</pre
+        >
+        <p>
+          This declares a quadword worth of memory in the data section whose
+          address is represented in the symbol <code>variable</code>. You can
+          access the value by saying <code>[variable]</code> - you're using the
+          plain old displacement addressing mode. See
+          <a
+            href="https://blog.yossarian.net/2020/06/13/How-x86_64-addresses-memory"
+            >this blog post by William Woodruff</a
+          >
+          for a more in-depth discussion of addressing memory. An interesting
+          quirk of <code>gdb</code> is that it allows you to directly view the
+          contents of the address, but only by asking it to print out the
+          contents of the name - while it is true in C and other higher level
+          languages that such a symbol ought to be interpreted as the location
+          of some static variable, in assembly, it's necessary to understand
+          that it's still a pointer, just a pointer to statically allocated
+          memory. Thus, in assembly code, when you say <code>variable</code>,
+          you are getting the address pointed to by the label, while in
+          <code>gdb</code>, you're getting the contents of the address labelled.
+          This tripped me up a few times when I was using <code>gdb</code> to
+          debug my code. While <code>gdb</code> supports assembly, its main
+          target is still the high level languages, like C, and in times like
+          this, it shows.
+        </p>
+        <h2>The Environment</h2>
+        <p>
+          So you can now run instructions, but instructions without input are
+          not very useful. You can get some input by reading the command line
+          arguments - when Linux sets up your program's stack, it puts the
+          number of command line arguments to
+          <code>QWORD [rsp + 0]</code> and pointers to the command line
+          arguments in <code>QWORD [rsp + 8]</code> onwards, if there are any,
+          followed by a null pointer and then a pointer to the environment
+          string (see <code>man env</code> for more details on this). Most
+          shells supply at least one - the name your command was invoked with.
+          For example, running <code>./compare one two</code> would result in
+          <code>QWORD [rsp + 0]</code> being 3,
+          <code>QWORD [rsp + 8]</code> begin a pointer to
+          <code>"./compare"</code>, <code>QWORD [rsp + 16]</code> being a
+          pointer to <code>"one"</code>, <code>QWORD [rsp + 24]</code> being a
+          pointer to <code>"two"</code>, <code>QWORD [rsp + 32]</code> being
+          zero, and <code>QWORD [rsp + 40]</code> being a pointer to the
+          environment string.
+        </p>
+        <p>
+          So you can get input (in the form of strings) from the command line,
+          but you don't know how to exit the program (no, you can't just
+          <code>hlt</code> - that would halt the entire core, and only Linux is
+          allowed to do that) and you don't know how to write to the command
+          line yet. Here's how you do every other bit of interacting with the
+          operating system: <code>syscall</code>. <code>syscall</code> is a
+          special instruction that raises an interrupt that Linux will process
+          and catch. See <code>man 2 syscall</code> for more info, and
+          <code>man 2 syscalls</code> for a list. To make a syscall in assembly,
+          you'd put the syscall number in <code>rax</code>, the arguments in
+          <code>rdi</code>, <code>rsi</code>, <code>rdx</code>,
+          <code>r10</code>, <code>r8</code>, <code>r9</code>, and execute the
+          <code>syscall</code> instruction. One example syscall is exit - number
+          60. Here's how you'd use it:
+        </p>
+        <pre>
+  mov rdi, 0
+  mov rax, 60
+  syscall</pre
+        >
+        <p>
+          You set the first and only argument to the exit code (which is
+          truncated by the OS to a short), and you set the system call number to
+          60, and make the syscall. You don't care what comes after, since your
+          program will definitely have exited and will have ceased to be.
+        </p>
+        <p>
+          Some of the other system calls I use are <code>open</code>,
+          <code>fstat</code>, and <code>mmap</code> - these allow me to
+          memory-map the input files from Advent of Code so I can just parse
+          through them using pointers. Additionally, <code>brk</code> lets you
+          allocate heap space - but note that the assembly version of
+          <code>brk</code>, unlike most system calls, does not have the same
+          interface as the C library version.
+        </p>
+        <h2>In Conclusion - Why?</h2>
+        <p>
+          I would be the first person to tell you that doing assembly
+          programming in this day and age is useful only to compiler writers, OS
+          developers, and some folks writing very specialized libraries (like
+          the folks behind GMP, for example). There's no real reason why you'd
+          want to program in assembly, and in fact, you often can't beat GCC in
+          terms of performance, and you certainly can't beat even C for ease of
+          use. So why learn to program in assembly? For the same reason that
+          half this blog post isn't about assembly - you get to peek behind the
+          curtain and learn about the abstractions that back our modern
+          computing environment, and understand the influence this foundational
+          layer has. For example, the reason why the C modulo operator
+          (<code>%</code>) actually does a remainder operation is because the
+          <code>idiv</code> instruction specifies that it returns the quotient
+          and the remainder, not the quotient and the modulus; the reason why
+          right shift of a negative signed number is hazardous in C is because
+          there's two possible instructions the compiler could emit, and one
+          does an arithmetic shift, filling with the sign bit, while the other
+          does a logical shift, filling with zero; and the reason why you can
+          (mostly) run 32 bit programs on 64 bit computers is because x86 is
+          binary-compatible with x86_64.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
