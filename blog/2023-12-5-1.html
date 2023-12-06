@@ -220,21 +220,24 @@ justin@Carbon ~/AdventOfCode> ld -o 5a 5a.o common.o</pre
   ; rax is zero
   add rax, 5
 
-notZero:
+.notZero:
         </pre>
         <p>
-          First, we do a comparison of <code>rax</code> with zero. There's two
-          main comparison operations - <code>cmp</code>, which subtracts the
-          second operand from the first and sets the flags according to the
-          result, and <code>test</code>, which does a bitwise-and of the two
-          operands and sets the flags according to the result. The flags
-          register (you can't directly interact with this one) is queried when
-          doing a conditional jump. Note that a <code>cmp</code> followed by a
-          relational-style conditional jump, like <code>jle</code>, will jump if
-          the first operand has the indicated relation to the second operand.
-          (In math speak, <i>a</i> - <i>b</i> is related to zero identically to
-          how <i>a</i> is related to <i>b</i>). There's also the negations of
-          each sort of conditional jump - <code>jnle</code>, for example (which,
+          We do a comparison of <code>rax</code> with zero, and then, if it's
+          not equal to zero, we jump to the label <code>.notZero</code>. The
+          overall effect of this is that if <code>rax</code> is zero, then it
+          becomes five; otherwise, it stays the same. There's two main
+          comparison operations - <code>cmp</code>, which subtracts the second
+          operand from the first and sets the flags according to the result, and
+          <code>test</code>, which does a bitwise-and of the two operands and
+          sets the flags according to the result. The flags register (you can't
+          directly interact with this one) is queried when doing a conditional
+          jump. Note that a <code>cmp</code> followed by a relational-style
+          conditional jump, like <code>jle</code>, will jump if the first
+          operand has the indicated relation to the second operand. (In math
+          speak, <i>a</i> - <i>b</i> is related to zero identically to how
+          <i>a</i> is related to <i>b</i>). There's also the negations of each
+          sort of conditional jump - <code>jnle</code>, for example (which,
           incidentally, is equivalent, both logically and in the assembly, to
           <code>jg</code>).
         </p>
