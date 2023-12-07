@@ -346,8 +346,8 @@ variable: dq 42</pre
           allowed to do that) and you don't know how to write to the command
           line yet. Here's how you do every other bit of interacting with the
           operating system: <code>syscall</code>. <code>syscall</code> is a
-          special instruction that raises an interrupt that Linux will process
-          and catch. See <code>man 2 syscall</code> for more info, and
+          special instruction that raises an interrupt that Linux will catch and
+          process. See <code>man 2 syscall</code> for more info, and
           <code>man 2 syscalls</code> for a list. To make a syscall in assembly,
           you'd put the syscall number in <code>rax</code>, the arguments in
           <code>rdi</code>, <code>rsi</code>, <code>rdx</code>,
@@ -362,7 +362,7 @@ variable: dq 42</pre
         >
         <p>
           You set the first and only argument to the exit code (which is
-          truncated by the OS to a short), and you set the system call number to
+          truncated by the OS to a byte), and you set the system call number to
           60, and make the syscall. You don't care what comes after, since your
           program will definitely have exited and will have ceased to be.
         </p>
