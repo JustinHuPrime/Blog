@@ -1,192 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>
-      Justin Hu | Monifactory Part 5 - Passive Automation Foundations
-    </title>
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="description" content="Justin Hu's Blog" />
-    <link rel="stylesheet" type="text/css" href="/style.css" />
+<head>
+  <title>
+    Justin Hu | Monifactory Part 5 - Passive Automation Foundations
+  </title>
 
-    <!-- JavaScript Bundle with Popper -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-      crossorigin="anonymous"
-    ></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Justin Hu's Blog" />
+  <link rel="stylesheet" type="text/css" href="/style.css" />
 
-    <!-- CSS only -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body>
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <h1>Monifactory Part 5 - Passive Automation Foundations</h1>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <p>
-            Time to broaden my tech base - and more specifically, time to
-            automate some resource production. First up, setting up gas
-            collection. Thankfully I had some parts left over from my storage
-            expansion.
-          </p>
-          <img src="/uploads/blog/monifactory-27.png" width="50%" />
-          <p>
-            Afterwards, I looked at my energy consumption and saw I was running
-            low - time to upgrade to nitrobenzene, an over 5x increase in power
-            output. I could infinitely produce nitrobenzene from the existing
-            benzene production, nitric acid produced from air distillation, and
-            sulfuric acid produced from nether air centrifuging, but only barely
-            - I fast needed a better way to produce sulfuric acid, since my
-            current method produced a measly 25 mB/s.
-          </p>
-          <img src="/uploads/blog/monifactory-28.png" width="50%" />
-          <p>
-            Now, with over 50 A of HV power at my disposal, it was time to
-            expand my resource production capabilities, and first was using
-            nether air distillation instead of centrifuging.
-          </p>
-          <img src="/uploads/blog/monifactory-29.png" width="50%" />
-          <p>
-            Next, after briefly running out of oxygen (!), I decided to fix that
-            and other issues by working on rock crushers. The LV variant was
-            completely subsumed by infinite cobblestone, and I wasn't about to
-            set up the stoneline (or the cobbleline) without first securing my
-            other resource production, so I started looking into the MV
-            materials, specifically, diorite. Diorite is a source of clay and
-            mirabilite dust, and those dusts both produce many useful elements.
-            Calcite wasn't a useful dust, nether was granite, and andesite's
-            output were also better produced through other processes.
-          </p>
-          <img src="/uploads/blog/monifactory-30.png" width="50%" />
-          <p>
-            Next the cobbleline (that is, the non-acid processing for
-            cobblestone derived resources). I was mainly interested in the clay
-            and saltpeter dust outputs, although the quartzite to glass to
-            silicon dioxide chain was also interesting, although only for the
-            oxygen production applications. I considered using netherrack for
-            sulfur production, but decided against it in favour of relying on
-            the production from diorite-derived mirabilite.
-          </p>
-          <img src="/uploads/blog/monifactory-31.png" width="50%" />
-          <p>
-            Then, I added a floor onto the Resource Ops building and built three
-            greenhouses (and production of fertilizer from basalt byproducts) -
-            one for sticky resin and products, one for ender spores and
-            products, and one for ethanol (from sugar cane) for organic
-            ethylene.
-          </p>
-          <img src="/uploads/blog/monifactory-32.png" width="50%" />
-          <p>
-            After some more finishing touches on the greenhouses, I turned
-            towards oil processing. I wasn't going to be using diesel power, but
-            gasoline and high-octane gasoline would be needed later on, so I had
-            to make a complete set of oil drills. I decided to drop raw oil,
-            since it was strictly inferior to oil, natural gas, since refinery
-            gas was produceable from light oil and wasn't used outside of
-            gasoline, and also drop helium-3, since it wouldn't be useful for
-            quite some time. This left me with salt water, lava, deuterium,
-            heavy oil, oil, and light oil drilling rigs to set up.
-          </p>
-          <p>
-            Actually building those rigs, however, was going to be expensive. I
-            was setting up Fluid Drilling Rig IIs, which cost a fair amount of
-            titanium and quite a few EV components to build, in addition to the
-            tungsten carbide for the gears. A lot of crafting and resource
-            processing later, however, I was ready to set up fluid production.
-            One question remained, though - could I use nitrobenzene for power
-            on the moon? The answer? Yes! And with that, I had fluid production.
-          </p>
-          <img src="/uploads/blog/monifactory-33.png" width="50%" />
-          <p>
-            I didn't set up any further processing save for electrolysis of salt
-            water - all of that would come in time. I think I had answered my
-            question from the beginning of this pack. Monifactory, too, intended
-            for you to passively automate production of just about every
-            intermediate product, although the item pipes native to GregTech
-            made that a bit of a pain. I could work with this paradigm, however,
-            since I still did have access to AE2-based item logistics.
-          </p>
-          <p>
-            Further consideration of my available power suggested that I would
-            soon be in need of a major power upgrade. After much consideration,
-            I decided on high-octane gasoline. This would, in fact, require
-            setup of petrochem, and for some components, setup of pyrolysis. I
-            also discovered that raw oil was, in fact, useful for producing
-            naphtha, and thus I needed an additional raw oil drilling rig.
-          </p>
-          <img src="/uploads/blog/monifactory-34.png" width="50%" />
-          <p>
-            Next up was setting up petrochem processing - the distillation
-            towers for the input oils and for cracked heavy and light fuel. This
-            also required attention to hydrogen production, since light fuel
-            would be lightly hydrogen cracked. I solved this with
-            sodium-catalyzed water electrolysis.
-          </p>
-          <img src="/uploads/blog/monifactory-35.png" width="50%" />
-          <p>
-            Finally, actually building the petrochem plant started with
-            allocating building 4 to be the petrochem building, and building up
-            the initial distillation apparatus in a double-height room. The
-            double height would only be relevant for later distillation steps,
-            though.
-          </p>
-          <img src="/uploads/blog/monifactory-36.png" width="50%" />
-          <p>
-            At this point, I was starting to run low on stainless steel, and on
-            the chromium needed to make it, so I took a quick detour into the
-            end and dug out a fair chunk of an island. It's quite impressive
-            just how much digging a 7&times;7&times;7 drill can do.
-          </p>
-          <img src="/uploads/blog/monifactory-37.png" width="50%" />
-          <p>
-            I set up the crackers, and noticed that I was running low on power.
-            Thankfully, this wasn't even a brown-out, it was merely a negative
-            trend on stored benzene. I went around the base and started applying
-            level control to several infinite processes to throttle them, chief
-            among them hydrogen production and air distillation.
-          </p>
-          <img src="/uploads/blog/monifactory-38.png" width="50%" />
-          <p>
-            With that diversion done, I returned to construction of the fifth
-            and sixth distillation towers, these ones actually using some of the
-            double-height space.
-          </p>
-          <img src="/uploads/blog/monifactory-39.png" width="50%" />
-          <p>
-            My penultimate task was to make the greenhouses and pyrolysis ovens
-            and distillation towers for methanol, acetone, and toluene
-            production. I already had a source of ethanol from ethylene
-            production, so I could skip that. At this point I did run out of
-            stainless steel and had to wait for it to process. Soon, I would
-            have automated all these production chains. While I was waiting for
-            materials to process, I installed wireless connectivity and
-            uninstalled the various wired terminals scattered around the base.
-          </p>
-          <img src="/uploads/blog/monifactory-40.png" width="50%" />
-          <p>
-            I was almost done, but I found that I had run out of LV circuits. I
-            decided to upgrade to an EV circuit assembler so I could use the SoC
-            recipe. With this upgrade, I considered myself in early EV.
-          </p>
-          <img src="/uploads/blog/monifactory-41.png" width="50%" />
-          <p>
-            After much crafting, I finished setting up the high-octane gasoline
-            production line.
-          </p>
-          <img src="/uploads/blog/monifactory-42.png" width="50%" />
-        </div>
+  <!-- JavaScript Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
+
+  <!-- CSS only -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h1>Monifactory Part 5 - Passive Automation Foundations</h1>
       </div>
     </div>
-  </body>
+    <div class="row">
+      <div class="col">
+        <p>
+          Time to broaden my tech base - and more specifically, time to
+          automate some resource production. First up, setting up gas
+          collection. Thankfully I had some parts left over from my storage
+          expansion.
+        </p>
+        <img src="/uploads/blog/monifactory-27.png" width="50%" />
+        <p>
+          Afterwards, I looked at my energy consumption and saw I was running
+          low - time to upgrade to nitrobenzene, an over 5x increase in power
+          output. I could infinitely produce nitrobenzene from the existing
+          benzene production, nitric acid produced from air distillation, and
+          sulfuric acid produced from nether air centrifuging, but only barely
+          - I fast needed a better way to produce sulfuric acid, since my
+          current method produced a measly 25 mB/s.
+        </p>
+        <img src="/uploads/blog/monifactory-28.png" width="50%" />
+        <p>
+          Now, with over 50 A of HV power at my disposal, it was time to
+          expand my resource production capabilities, and first was using
+          nether air distillation instead of centrifuging.
+        </p>
+        <img src="/uploads/blog/monifactory-29.png" width="50%" />
+        <p>
+          Next, after briefly running out of oxygen (!), I decided to fix that
+          and other issues by working on rock crushers. The LV variant was
+          completely subsumed by infinite cobblestone, and I wasn't about to
+          set up the stoneline (or the cobbleline) without first securing my
+          other resource production, so I started looking into the MV
+          materials, specifically, diorite. Diorite is a source of clay and
+          mirabilite dust, and those dusts both produce many useful elements.
+          Calcite wasn't a useful dust, nether was granite, and andesite's
+          output were also better produced through other processes.
+        </p>
+        <img src="/uploads/blog/monifactory-30.png" width="50%" />
+        <p>
+          Next the cobbleline (that is, the non-acid processing for
+          cobblestone derived resources). I was mainly interested in the clay
+          and saltpeter dust outputs, although the quartzite to glass to
+          silicon dioxide chain was also interesting, although only for the
+          oxygen production applications. I considered using netherrack for
+          sulfur production, but decided against it in favour of relying on
+          the production from diorite-derived mirabilite.
+        </p>
+        <img src="/uploads/blog/monifactory-31.png" width="50%" />
+        <p>
+          Then, I added a floor onto the Resource Ops building and built three
+          greenhouses (and production of fertilizer from basalt byproducts) -
+          one for sticky resin and products, one for ender spores and
+          products, and one for ethanol (from sugar cane) for organic
+          ethylene.
+        </p>
+        <img src="/uploads/blog/monifactory-32.png" width="50%" />
+        <p>
+          After some more finishing touches on the greenhouses, I turned
+          towards oil processing. I wasn't going to be using diesel power, but
+          gasoline and high-octane gasoline would be needed later on, so I had
+          to make a complete set of oil drills. I decided to drop raw oil,
+          since it was strictly inferior to oil, natural gas, since refinery
+          gas was produceable from light oil and wasn't used outside of
+          gasoline, and also drop helium-3, since it wouldn't be useful for
+          quite some time. This left me with salt water, lava, deuterium,
+          heavy oil, oil, and light oil drilling rigs to set up.
+        </p>
+        <p>
+          Actually building those rigs, however, was going to be expensive. I
+          was setting up Fluid Drilling Rig IIs, which cost a fair amount of
+          titanium and quite a few EV components to build, in addition to the
+          tungsten carbide for the gears. A lot of crafting and resource
+          processing later, however, I was ready to set up fluid production.
+          One question remained, though - could I use nitrobenzene for power
+          on the moon? The answer? Yes! And with that, I had fluid production.
+        </p>
+        <img src="/uploads/blog/monifactory-33.png" width="50%" />
+        <p>
+          I didn't set up any further processing save for electrolysis of salt
+          water - all of that would come in time. I think I had answered my
+          question from the beginning of this pack. Monifactory, too, intended
+          for you to passively automate production of just about every
+          intermediate product, although the item pipes native to GregTech
+          made that a bit of a pain. I could work with this paradigm, however,
+          since I still did have access to AE2-based item logistics.
+        </p>
+        <p>
+          Further consideration of my available power suggested that I would
+          soon be in need of a major power upgrade. After much consideration,
+          I decided on high-octane gasoline. This would, in fact, require
+          setup of petrochem, and for some components, setup of pyrolysis. I
+          also discovered that raw oil was, in fact, useful for producing
+          naphtha, and thus I needed an additional raw oil drilling rig.
+        </p>
+        <img src="/uploads/blog/monifactory-34.png" width="50%" />
+        <p>
+          Next up was setting up petrochem processing - the distillation
+          towers for the input oils and for cracked heavy and light fuel. This
+          also required attention to hydrogen production, since light fuel
+          would be lightly hydrogen cracked. I solved this with
+          sodium-catalyzed water electrolysis.
+        </p>
+        <img src="/uploads/blog/monifactory-35.png" width="50%" />
+        <p>
+          Finally, actually building the petrochem plant started with
+          allocating building 4 to be the petrochem building, and building up
+          the initial distillation apparatus in a double-height room. The
+          double height would only be relevant for later distillation steps,
+          though.
+        </p>
+        <img src="/uploads/blog/monifactory-36.png" width="50%" />
+        <p>
+          At this point, I was starting to run low on stainless steel, and on
+          the chromium needed to make it, so I took a quick detour into the
+          end and dug out a fair chunk of an island. It's quite impressive
+          just how much digging a 7&times;7&times;7 drill can do.
+        </p>
+        <img src="/uploads/blog/monifactory-37.png" width="50%" />
+        <p>
+          I set up the crackers, and noticed that I was running low on power.
+          Thankfully, this wasn't even a brown-out, it was merely a negative
+          trend on stored benzene. I went around the base and started applying
+          level control to several infinite processes to throttle them, chief
+          among them hydrogen production and air distillation.
+        </p>
+        <img src="/uploads/blog/monifactory-38.png" width="50%" />
+        <p>
+          With that diversion done, I returned to construction of the fifth
+          and sixth distillation towers, these ones actually using some of the
+          double-height space.
+        </p>
+        <img src="/uploads/blog/monifactory-39.png" width="50%" />
+        <p>
+          My penultimate task was to make the greenhouses and pyrolysis ovens
+          and distillation towers for methanol, acetone, and toluene
+          production. I already had a source of ethanol from ethylene
+          production, so I could skip that. At this point I did run out of
+          stainless steel and had to wait for it to process. Soon, I would
+          have automated all these production chains. While I was waiting for
+          materials to process, I installed wireless connectivity and
+          uninstalled the various wired terminals scattered around the base.
+        </p>
+        <img src="/uploads/blog/monifactory-40.png" width="50%" />
+        <p>
+          I was almost done, but I found that I had run out of LV circuits. I
+          decided to upgrade to an EV circuit assembler so I could use the SoC
+          recipe. With this upgrade, I considered myself in early EV.
+        </p>
+        <img src="/uploads/blog/monifactory-41.png" width="50%" />
+        <p>
+          After much crafting, I finished setting up the high-octane gasoline
+          production line.
+        </p>
+        <img src="/uploads/blog/monifactory-42.png" width="50%" />
+      </div>
+    </div>
+  </div>
+</body>
+
 </html>

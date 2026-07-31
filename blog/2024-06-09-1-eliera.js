@@ -20,49 +20,49 @@ window.addEventListener("load", () => {
     }
     let eliera = {
       height: Number.parseFloat(
-        document.getElementById("eliera-height").value.replace(/,/g, "")
+        document.getElementById("eliera-height").value.replace(/,/g, ""),
       ),
       radius: Number.parseFloat(
-        document.getElementById("eliera-radius").value.replace(/,/g, "")
+        document.getElementById("eliera-radius").value.replace(/,/g, ""),
       ),
     };
     let satellite = {
       x: Number.parseFloat(
-        document.getElementById("satellite-x").value.replace(/,/g, "")
+        document.getElementById("satellite-x").value.replace(/,/g, ""),
       ),
       y: Number.parseFloat(
-        document.getElementById("satellite-y").value.replace(/,/g, "")
+        document.getElementById("satellite-y").value.replace(/,/g, ""),
       ),
       z: 0,
       dx: Number.parseFloat(
-        document.getElementById("satellite-dx").value.replace(/,/g, "")
+        document.getElementById("satellite-dx").value.replace(/,/g, ""),
       ),
       dy: Number.parseFloat(
-        document.getElementById("satellite-dy").value.replace(/,/g, "")
+        document.getElementById("satellite-dy").value.replace(/,/g, ""),
       ),
       dz: 0,
     };
     let displayScale = Number.parseFloat(
-      document.getElementById("display-scale").value.replace(/,/g, "")
+      document.getElementById("display-scale").value.replace(/,/g, ""),
     );
     let stepsPerFrame = Number.parseFloat(
-      document.getElementById("steps-per-frame").value.replace(/,/g, "")
+      document.getElementById("steps-per-frame").value.replace(/,/g, ""),
     );
     let timePerStep = Number.parseFloat(
-      document.getElementById("time-per-step").value.replace(/,/g, "")
+      document.getElementById("time-per-step").value.replace(/,/g, ""),
     );
     const precursorLerpDistance = Number.parseFloat(
       document
         .getElementById("precursor-gravity-distance")
-        .value.replace(/,/g, "")
+        .value.replace(/,/g, ""),
     );
     const PRECURSOR_G = Number.parseFloat(
-      document.getElementById("precursor-gravity").value.replace(/,/g, "")
+      document.getElementById("precursor-gravity").value.replace(/,/g, ""),
     );
     const NORMAL_G =
       -6.6743e-11 *
       Number.parseFloat(
-        document.getElementById("eliera-mass").value.replace(/,/g, "")
+        document.getElementById("eliera-mass").value.replace(/,/g, ""),
       );
 
     let frame = 0;
@@ -77,7 +77,7 @@ window.addEventListener("load", () => {
         512 - eliera.height / displayScale,
         512 - eliera.radius / displayScale,
         (eliera.height * 2) / displayScale,
-        (eliera.radius * 2) / displayScale
+        (eliera.radius * 2) / displayScale,
       );
       // draw eliera com
       ctx.fillStyle = "#00ff00";
@@ -93,7 +93,7 @@ window.addEventListener("load", () => {
         512 + -satellite.y / displayScale,
         3,
         0,
-        Math.PI * 2
+        Math.PI * 2,
       );
       ctx.fill();
 
@@ -117,7 +117,7 @@ window.addEventListener("load", () => {
         let distanceToCenter = Math.sqrt(
           Math.pow(satellite.x, 2) +
             Math.pow(satellite.y, 2) +
-            Math.pow(satellite.z, 2)
+            Math.pow(satellite.z, 2),
         );
 
         // calculate acceleration
